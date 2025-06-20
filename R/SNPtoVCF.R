@@ -1,10 +1,11 @@
 
 SNPtoVCF <- function(SNPdata,
-                     vcf_file) {
+                     vcf_file,
+                     return_df = F) {
   data <- get(load(SNPdata))
 
   vcf <- data.frame(CHROM = data$CHROM,
-                    POS = data$MB,
+                    POS = data$MB*10^6,
                     ID = data$MARKER,
                     REF = data$A1,
                     ALT = data$A2,
@@ -24,6 +25,10 @@ SNPtoVCF <- function(SNPdata,
   writeLines(header, con = vcf_file)
   write.table(vcf, file = vcf_file, append = TRUE, quote = FALSE,
               sep ="\t", row.names = FALSE, col.names = FALSE)
+
+  if (isTRUE(return_df)) {
+    return(vcf)
+  }
 }
 
 # Only supporting unphased data as of now
